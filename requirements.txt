@@ -1,0 +1,38 @@
+
+# Food Ordering Web Application Requirements
+
+## Frontend Dependencies
+- React v18.3.1
+- React DOM v18.3.1
+- React Router DOM v6.26.2
+- TypeScript
+- Vite (Build tool)
+- Tailwind CSS
+- shadcn/ui components
+- Lucide React v0.462.0 (Icons)
+- Clsx v2.1.1 (Utility for constructing className strings)
+- Tailwind Merge v2.5.2 (Merge Tailwind CSS classes without conflicts)
+- @tanstack/react-query v5.56.2 (Data fetching and state management)
+- Sonner v1.5.0 (Toast notifications)
+
+## UI Components
+- Radix UI primitives (various components)
+- React Hook Form v7.53.0 (Form handling)
+- Zod v3.23.8 (Schema validation)
+- Recharts v2.12.7 (Charting library)
+- Embla Carousel v8.3.0 (Carousel component)
+
+## Key Features
+- Responsive design for mobile, tablet, and desktop
+- Food ordering functionality
+- Category browsing
+- Popular items showcase
+- Interactive chatbot for customer assistance
+- Price display in INR currency
+
+## Planned Features
+- User authentication
+- Order history
+- Payment integration
+- Restaurant profiles
+- Menu management
