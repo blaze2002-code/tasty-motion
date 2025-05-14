@@ -11,6 +11,9 @@ interface MenuItemCardProps {
   preparationTime: string;
 }
 
+// Exchange rate: 1 USD = 83 INR (approximate)
+const USD_TO_INR = 83;
+
 const MenuItemCard = ({ 
   title, 
   description, 
@@ -19,6 +22,9 @@ const MenuItemCard = ({
   rating, 
   preparationTime 
 }: MenuItemCardProps) => {
+  // Convert price to INR
+  const priceInINR = price * USD_TO_INR;
+  
   return (
     <Card className="overflow-hidden hover-scale card-shadow">
       <div className="relative h-48">
@@ -41,7 +47,7 @@ const MenuItemCard = ({
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">{description}</p>
         
         <div className="flex justify-between items-center mb-4">
-          <span className="font-bold text-food-orange text-lg">${price.toFixed(2)}</span>
+          <span className="font-bold text-food-orange text-lg">₹{priceInINR.toFixed(0)}</span>
           <span className="text-sm text-gray-500 flex items-center">
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

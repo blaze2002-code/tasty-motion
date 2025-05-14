@@ -4,8 +4,8 @@ import Hero from "../components/Hero";
 import Categories from "../components/Categories";
 import PopularItems from "../components/PopularItems";
 import Promotion from "../components/Promotion";
-import Testimonials from "../components/Testimonials";
 import Footer from "../components/Footer";
+import ChatBot from "../components/ChatBot";
 
 const Index = () => {
   return (
@@ -15,7 +15,7 @@ const Index = () => {
       <Categories />
       <PopularItems />
       <Promotion />
-      <Testimonials />
+      <ChatBot />
       <Footer />
     </div>
   );
