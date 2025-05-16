@@ -5,7 +5,7 @@ import Categories from "../components/Categories";
 import PopularItems from "../components/PopularItems";
 import Promotion from "../components/Promotion";
 import Footer from "../components/Footer";
-import ChatBot from "../components/ChatBot";
+import ChatBot from "../components/chatbot";
 
 const Index = () => {
   return (
