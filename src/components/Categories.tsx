@@ -1,55 +1,38 @@
 
 import CategoryCard from "./CategoryCard";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
+import { getCategoryCounts } from "../data/menu_data/menuItems";
 
-const categories = [
-  {
-    id: 1,
-    title: "Pizza",
-    image: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=2340&auto=format&fit=crop",
-    count: 42
-  },
-  {
-    id: 2,
-    title: "Burgers",
-    image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?q=80&w=2340&auto=format&fit=crop",
-    count: 36
-  },
-  {
-    id: 3,
-    title: "Sushi",
-    image: "https://images.unsplash.com/photo-1563612116625-3012372fccce?q=80&w=2340&auto=format&fit=crop",
-    count: 28
-  },
-  {
-    id: 4,
-    title: "Pasta",
-    image: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=80&w=2340&auto=format&fit=crop",
-    count: 31
-  },
-  {
-    id: 5,
-    title: "Desserts",
-    image: "https://images.unsplash.com/photo-1587314168485-3236d6710814?q=80&w=2340&auto=format&fit=crop",
-    count: 25
-  },
-  {
-    id: 6,
-    title: "Drinks",
-    image: "https://images.unsplash.com/photo-1497534446932-c925b458314e?q=80&w=2340&auto=format&fit=crop",
-    count: 22
-  }
-];
+const categoryImages = {
+  sauce: "https://upload.wikimedia.org/wikipedia/commons/1/13/Mint_sauce.jpg",
+  papadum: "https://source.unsplash.com/400x300/?Papadum",
+  bread: "https://source.unsplash.com/400x300/?Naan%20Bread",
+  raita: "https://source.unsplash.com/400x300/?Raitha",
+  rice: "https://source.unsplash.com/400x300/?Biryani%20Rice",
+  salad: "https://source.unsplash.com/400x300/?Indian%20Salad",
+  drinks: "https://source.unsplash.com/400x300/?Indian%20Drinks",
+  appetizer: "https://source.unsplash.com/400x300/?Indian%20Appetizer",
+  curry: "https://source.unsplash.com/400x300/?Indian%20Curry",
+  fry: "https://source.unsplash.com/400x300/?Indian%20Fried%20Food"
+};
 
 const Categories = () => {
+  const categoryCounts = getCategoryCounts();
+  const categories = Object.keys(categoryCounts).map((category, index) => ({
+    id: index + 1,
+    title: category.charAt(0).toUpperCase() + category.slice(1),
+    image: categoryImages[category as keyof typeof categoryImages] || "https://source.unsplash.com/400x300/?Indian%20Food",
+    count: categoryCounts[category]
+  }));
+
   return (
     <section className="py-16 bg-food-gray">
       <div className="container mx-auto px-4 md:px-8">
         <div className="flex justify-between items-center mb-10">
           <div>
             <h2 className="text-3xl font-bold mb-2">Categories</h2>
-            <p className="text-gray-600">Explore our wide variety of delicious options</p>
+            <p className="text-gray-600">Explore our wide variety of delicious Indian cuisine</p>
           </div>
           <Button variant="outline" className="border-food-orange text-food-orange hover:bg-food-orange/10 hidden md:flex">
             View All <ArrowRight className="ml-2 h-4 w-4" />
