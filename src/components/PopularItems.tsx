@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MenuItemCard from "./MenuItemCard";
 import { menuItems, getUniqueCategories } from "../data/menu_data/menuItems";
+import { Link } from "react-router-dom";
 
 const PopularItems = () => {
   const categories = getUniqueCategories();
@@ -66,9 +67,11 @@ const PopularItems = () => {
         </Tabs>
         
         <div className="text-center mt-12">
-          <Button className="bg-food-orange hover:bg-food-orange/90 px-8">
-            View Full Menu
-          </Button>
+          <Link to="/menu">
+            <Button className="bg-food-orange hover:bg-food-orange/90 px-8">
+              View Full Menu
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

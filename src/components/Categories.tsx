@@ -3,6 +3,7 @@ import CategoryCard from "./CategoryCard";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { getCategoryCounts } from "../data/menu_data/menuItems";
+import { Link } from "react-router-dom";
 
 const categoryImages = {
   sauce: "https://upload.wikimedia.org/wikipedia/commons/1/13/Mint_sauce.jpg",
@@ -22,6 +23,7 @@ const Categories = () => {
   const categories = Object.keys(categoryCounts).map((category, index) => ({
     id: index + 1,
     title: category.charAt(0).toUpperCase() + category.slice(1),
+    category: category,
     image: categoryImages[category as keyof typeof categoryImages] || "https://source.unsplash.com/400x300/?Indian%20Food",
     count: categoryCounts[category]
   }));
@@ -34,9 +36,11 @@ const Categories = () => {
             <h2 className="text-3xl font-bold mb-2">Categories</h2>
             <p className="text-gray-600">Explore our wide variety of delicious Indian cuisine</p>
           </div>
-          <Button variant="outline" className="border-food-orange text-food-orange hover:bg-food-orange/10 hidden md:flex">
-            View All <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <Link to="/menu">
+            <Button variant="outline" className="border-food-orange text-food-orange hover:bg-food-orange/10 hidden md:flex">
+              View All <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
@@ -44,6 +48,7 @@ const Categories = () => {
             <CategoryCard 
               key={category.id}
               title={category.title}
+              category={category.category}
               image={category.image}
               count={category.count}
             />
@@ -51,9 +56,11 @@ const Categories = () => {
         </div>
         
         <div className="mt-8 flex justify-center md:hidden">
-          <Button variant="outline" className="border-food-orange text-food-orange hover:bg-food-orange/10">
-            View All <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <Link to="/menu">
+            <Button variant="outline" className="border-food-orange text-food-orange hover:bg-food-orange/10">
+              View All <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
