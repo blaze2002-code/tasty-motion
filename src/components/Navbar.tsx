@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Menu, X } from "lucide-react";
-import useIsMobile from "../hooks/use-mobile";
+import { useIsMobile } from "../hooks/use-mobile";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
