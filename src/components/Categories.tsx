@@ -1,6 +1,6 @@
 
 import CategoryCard from "./CategoryCard";
-import { Button } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { getCategoryCounts } from "../data/menu_data/menuItems";
 
