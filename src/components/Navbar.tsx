@@ -44,9 +44,6 @@ const Navbar = () => {
             <Link to="/contact" className="hover:text-food-orange">
               Contact
             </Link>
-            <Link to="/image-generator" className="hover:text-food-orange">
-              Image Generator
-            </Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -101,13 +98,6 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
-            </Link>
-            <Link
-              to="/image-generator"
-              className="px-4 py-2 hover:bg-gray-100 rounded"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Image Generator
             </Link>
             <div className="pt-4 flex flex-col space-y-2 border-t">
               <Button size="sm" variant="outline" className="w-full">
