@@ -1,234 +1,215 @@
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import MenuItemCard from "../components/MenuItemCard";
-import { menuItems, getUniqueCategories } from "../data/menu_data/menuItems";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import {
+  Search,
+  ChevronDown,
+  Star,
+  Clock,
+  Flame,
+  Leaf,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import MenuItemCard from "@/components/MenuItemCard";
+
+// Placeholder menu data
+const menuData = [
+  {
+    id: 1,
+    key: 1,
+    title: "Butter Chicken",
+    description: "Tender chicken in a rich buttery tomato sauce",
+    price: 320,
+    image: "/assets/butter-chicken.jpg",
+    rating: 4.8,
+    preparationTime: "25 mins",
+    category: "mains",
+    tags: ["popular", "spicy"],
+  },
+  {
+    id: 2,
+    key: 2,
+    title: "Paneer Tikka",
+    description: "Marinated cottage cheese cubes grilled to perfection",
+    price: 250,
+    image: "/assets/paneer-tikka.jpg",
+    rating: 4.6,
+    preparationTime: "20 mins",
+    category: "starters",
+    tags: ["vegetarian", "popular"],
+  },
+  {
+    id: 3,
+    key: 3,
+    title: "Masala Dosa",
+    description: "Crispy rice crepe filled with spiced potato mixture",
+    price: 180,
+    image: "/assets/masala-dosa.jpg",
+    rating: 4.7,
+    preparationTime: "15 mins",
+    category: "breakfast",
+    tags: ["vegetarian", "quick"],
+  },
+  {
+    id: 4,
+    key: 4,
+    title: "Hyderabadi Biryani",
+    description: "Fragrant basmati rice with tender meat and aromatic spices",
+    price: 350,
+    image: "/assets/biryani.jpg",
+    rating: 4.9,
+    preparationTime: "35 mins",
+    category: "mains",
+    tags: ["popular", "spicy"],
+  },
+  {
+    id: 5,
+    key: 5,
+    title: "Vegetable Samosa",
+    description: "Crispy pastry filled with spiced potatoes and peas",
+    price: 120,
+    image: "/assets/samosa.jpg",
+    rating: 4.5,
+    preparationTime: "10 mins",
+    category: "starters",
+    tags: ["vegetarian", "quick"],
+  },
+  {
+    id: 6,
+    key: 6,
+    title: "Chicken Tikka",
+    description: "Grilled chicken pieces marinated in spices and yogurt",
+    price: 280,
+    image: "/assets/chicken-tikka.jpg",
+    rating: 4.7,
+    preparationTime: "22 mins",
+    category: "starters",
+    tags: ["popular", "spicy"],
+  },
+  {
+    id: 7,
+    key: 7,
+    title: "Gulab Jamun",
+    description: "Deep-fried milk solids soaked in sugar syrup",
+    price: 150,
+    image: "/assets/gulab-jamun.jpg",
+    rating: 4.8,
+    preparationTime: "5 mins",
+    category: "desserts",
+    tags: ["sweet", "vegetarian"],
+  },
+  {
+    id: 8,
+    key: 8,
+    title: "Palak Paneer",
+    description: "Cottage cheese cubes in a creamy spinach sauce",
+    price: 270,
+    image: "/assets/palak-paneer.jpg",
+    rating: 4.6,
+    preparationTime: "25 mins",
+    category: "mains",
+    tags: ["vegetarian", "healthy"],
+  },
+];
 
 const Menu = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const categoryParam = searchParams.get("category") || "all";
-  
+  const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState(categoryParam);
-  const [sortBy, setSortBy] = useState("default");
-  
-  const categories = ["all", ...getUniqueCategories()];
-  const itemsPerPage = 9;
-  
-  // Update URL when category changes
+  const [filteredItems, setFilteredItems] = useState(menuData);
+
   useEffect(() => {
-    if (selectedCategory === "all") {
-      searchParams.delete("category");
-    } else {
-      searchParams.set("category", selectedCategory);
+    let result = menuData;
+
+    // Filter by search term
+    if (searchTerm) {
+      result = result.filter(
+        (item) =>
+          item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-    setSearchParams(searchParams);
-  }, [selectedCategory, searchParams, setSearchParams]);
-  
-  // Filter items based on search term and selected category
-  const filteredItems = menuItems.filter((item) => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                        item.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-  
-  // Sort items based on selected sorting option
-  const sortedItems = [...filteredItems].sort((a, b) => {
-    switch(sortBy) {
-      case "price-low":
-        return a.price - b.price;
-      case "price-high":
-        return b.price - a.price;
-      case "rating":
-        return b.rating - a.rating;
-      case "time":
-        return a.preparationTime.localeCompare(b.preparationTime);
-      default:
-        return 0;
+
+    // Filter by category (tab)
+    if (activeTab !== "all") {
+      result = result.filter((item) => item.category === activeTab);
     }
-  });
-  
-  // Calculate pagination
-  const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedItems = sortedItems.slice(startIndex, startIndex + itemsPerPage);
-  
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-  
+
+    setFilteredItems(result);
+  }, [searchTerm, activeTab]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
-      <main className="flex-grow py-12">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="mb-12 text-center">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">Our Menu</h1>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Explore our wide variety of authentic Indian dishes, prepared with traditional recipes and the finest ingredients
+      <main className="flex-grow">
+        <div className="bg-food-beige dark:bg-gray-800 py-12">
+          <div className="container mx-auto px-4">
+            <h1 className="text-4xl font-bold text-center mb-2">Our Menu</h1>
+            <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
+              Explore our wide range of delicious dishes
             </p>
-          </div>
-          
-          <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
-            {/* Search Bar */}
-            <div className="w-full md:w-1/3">
+
+            {/* Search and filters */}
+            <div className="max-w-md mx-auto mb-8 relative">
+              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               <Input
-                type="search"
-                placeholder="Search menu items..."
+                type="text"
+                placeholder="Search dishes..."
+                className="pl-10"
                 value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full"
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* Category Filter */}
-              <Select 
-                value={selectedCategory} 
-                onValueChange={(value) => {
-                  setSelectedCategory(value);
-                  setCurrentPage(1);
-                }}
-              >
-                <SelectTrigger className="w-full md:w-[180px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              {/* Sort Options */}
-              <Select 
-                value={sortBy} 
-                onValueChange={(value) => {
-                  setSortBy(value);
-                  setCurrentPage(1);
-                }}
-              >
-                <SelectTrigger className="w-full md:w-[180px]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="default">Default</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  <SelectItem value="rating">Rating</SelectItem>
-                  <SelectItem value="time">Preparation Time</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+
+            {/* Category tabs */}
+            <Tabs
+              defaultValue="all"
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="mb-8"
+            >
+              <TabsList className="flex justify-center flex-wrap h-auto p-1">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="starters">Starters</TabsTrigger>
+                <TabsTrigger value="mains">Main Course</TabsTrigger>
+                <TabsTrigger value="desserts">Desserts</TabsTrigger>
+                <TabsTrigger value="breakfast">Breakfast</TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {/* Menu items */}
+            {filteredItems.length === 0 ? (
+              <div className="text-center py-10">
+                <p className="text-gray-500 dark:text-gray-400">
+                  No items found matching your search.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredItems.map((item) => (
+                  <MenuItemCard
+                    key={item.id}
+                    id={item.id}
+                    title={item.title}
+                    description={item.description}
+                    price={item.price}
+                    image={item.image}
+                    rating={item.rating}
+                    preparationTime={item.preparationTime}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-          
-          {/* Results Count */}
-          <p className="text-gray-500 mb-6">
-            Showing {paginatedItems.length} of {filteredItems.length} items
-          </p>
-          
-          {/* Menu Items Grid */}
-          {paginatedItems.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {paginatedItems.map((item) => (
-                <MenuItemCard
-                  key={item.id}
-                  title={item.title}
-                  description={item.description}
-                  price={item.price}
-                  image={item.image}
-                  rating={item.rating}
-                  preparationTime={item.preparationTime}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <h3 className="text-2xl font-semibold mb-2">No items found</h3>
-              <p className="text-gray-500">Try changing your search or filter criteria</p>
-            </div>
-          )}
-          
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-                
-                {Array.from({ length: totalPages }).map((_, i) => {
-                  const page = i + 1;
-                  // Show first, last, and pages around current
-                  if (
-                    page === 1 || 
-                    page === totalPages || 
-                    (page >= currentPage - 1 && page <= currentPage + 1)
-                  ) {
-                    return (
-                      <PaginationItem key={page}>
-                        <PaginationLink 
-                          isActive={page === currentPage}
-                          onClick={() => handlePageChange(page)}
-                        >
-                          {page}
-                        </PaginationLink>
-                      </PaginationItem>
-                    );
-                  }
-                  // Add ellipsis for skipped pages
-                  else if (
-                    page === currentPage - 2 ||
-                    page === currentPage + 2
-                  ) {
-                    return <PaginationItem key={page}>...</PaginationItem>;
-                  }
-                  return null;
-                })}
-                
-                <PaginationItem>
-                  <PaginationNext 
-                    onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          )}
         </div>
       </main>
-      
       <Footer />
     </div>
   );

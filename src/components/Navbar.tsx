@@ -6,6 +6,7 @@ import { ShoppingCart, Menu, X, User } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
@@ -41,8 +42,8 @@ const Navbar = () => {
   return (
     <nav
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-md py-2" : "bg-transparent py-4"
-      }`}
+        isScrolled ? "bg-background shadow-md py-2" : "bg-transparent py-4"
+      } dark:bg-background`}
     >
       <div className="container mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between">
@@ -67,6 +68,7 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
             {user ? (
               <div className="flex items-center space-x-3">
                 <span className="text-sm">Hello, {user.name.split(' ')[0]}</span>
@@ -95,45 +97,47 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <Button
-            size="icon"
-            variant="ghost"
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isMobile && isMenuOpen && (
-        <div className="md:hidden bg-white p-4 shadow-md">
+        <div className="md:hidden bg-background p-4 shadow-md">
           <div className="flex flex-col space-y-4">
             <Link
               to="/"
-              className="px-4 py-2 hover:bg-gray-100 rounded"
+              className="px-4 py-2 hover:bg-accent rounded"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               to="/menu"
-              className="px-4 py-2 hover:bg-gray-100 rounded"
+              className="px-4 py-2 hover:bg-accent rounded"
               onClick={() => setIsMenuOpen(false)}
             >
               Menu
             </Link>
             <Link
               to="/about"
-              className="px-4 py-2 hover:bg-gray-100 rounded"
+              className="px-4 py-2 hover:bg-accent rounded"
               onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
             <Link
               to="/contact"
-              className="px-4 py-2 hover:bg-gray-100 rounded"
+              className="px-4 py-2 hover:bg-accent rounded"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact

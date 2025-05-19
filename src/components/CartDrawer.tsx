@@ -46,8 +46,8 @@ const CartDrawer = () => {
 
   return (
     <Drawer open={isCartOpen} onOpenChange={setIsCartOpen}>
-      <DrawerContent className="max-h-[85vh]">
-        <DrawerHeader className="border-b">
+      <DrawerContent className="max-h-[85vh] dark:bg-gray-900 dark:text-white">
+        <DrawerHeader className="border-b dark:border-gray-700">
           <DrawerTitle className="flex items-center gap-2">
             <ShoppingCart className="w-5 h-5" />
             Your Cart ({totalItems})
@@ -56,16 +56,16 @@ const CartDrawer = () => {
         <div className="overflow-y-auto max-h-[60vh] p-4">
           {cartItems.length === 0 ? (
             <div className="text-center py-10">
-              <ShoppingCart className="mx-auto mb-4 h-12 w-12 text-gray-400" />
+              <ShoppingCart className="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-500" />
               <h3 className="text-lg font-medium">Your cart is empty</h3>
-              <p className="text-gray-500 mt-1">Add some delicious items to get started!</p>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">Add some delicious items to get started!</p>
             </div>
           ) : (
             <>
               {cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 py-3 border-b"
+                  className="flex items-center gap-3 py-3 border-b dark:border-gray-700"
                 >
                   <img
                     src={item.image}
@@ -98,7 +98,7 @@ const CartDrawer = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-gray-500"
+                    className="h-8 w-8 text-gray-500 dark:text-gray-400"
                     onClick={() => removeFromCart(item.id)}
                   >
                     <X className="h-4 w-4" />
@@ -108,7 +108,7 @@ const CartDrawer = () => {
             </>
           )}
         </div>
-        <DrawerFooter className="border-t">
+        <DrawerFooter className="border-t dark:border-gray-700">
           {cartItems.length > 0 && (
             <div className="flex justify-between text-lg font-medium mb-4">
               <span>Total:</span>
@@ -127,7 +127,7 @@ const CartDrawer = () => {
               <Button
                 variant="outline"
                 onClick={clearCart}
-                className="text-gray-500"
+                className="text-gray-500 dark:text-gray-400"
               >
                 Clear Cart
               </Button>
