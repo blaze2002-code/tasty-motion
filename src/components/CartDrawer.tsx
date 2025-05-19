@@ -121,7 +121,7 @@ const CartDrawer = () => {
               className="bg-food-orange hover:bg-food-orange/90"
               disabled={cartItems.length === 0}
             >
-              Checkout
+              Proceed to Checkout
             </Button>
             {cartItems.length > 0 && (
               <Button
