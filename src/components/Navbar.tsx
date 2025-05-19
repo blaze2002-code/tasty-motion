@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Menu, X, User } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
 import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { user, signOut } = useAuth();
+  const { totalItems, setIsCartOpen } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +30,11 @@ const Navbar = () => {
 
   const handleSignOut = () => {
     signOut();
+    setIsMenuOpen(false);
+  };
+
+  const handleCartClick = () => {
+    setIsCartOpen(true);
     setIsMenuOpen(false);
   };
 
@@ -72,8 +79,18 @@ const Navbar = () => {
                 <User className="h-4 w-4 mr-2" /> Sign In
               </Button>
             )}
-            <Button size="sm" className="bg-food-orange hover:bg-food-orange/90">
-              <ShoppingCart className="h-4 w-4 mr-2" /> Cart (0)
+            <Button 
+              size="sm" 
+              className="bg-food-orange hover:bg-food-orange/90 relative"
+              onClick={handleCartClick}
+            >
+              <ShoppingCart className="h-4 w-4 mr-2" /> 
+              Cart 
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
             </Button>
           </div>
 
@@ -134,8 +151,18 @@ const Navbar = () => {
                   <User className="h-4 w-4 mr-2" /> Sign In
                 </Button>
               )}
-              <Button size="sm" className="w-full bg-food-orange hover:bg-food-orange/90">
-                <ShoppingCart className="h-4 w-4 mr-2" /> Cart (0)
+              <Button 
+                size="sm" 
+                className="w-full bg-food-orange hover:bg-food-orange/90 relative"
+                onClick={handleCartClick}
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" /> 
+                Cart 
+                {totalItems > 0 && (
+                  <span className="ml-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
               </Button>
             </div>
           </div>

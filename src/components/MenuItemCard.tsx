@@ -2,6 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
+import { useCart } from "../contexts/CartContext";
 
 interface MenuItemCardProps {
   title: string;
@@ -10,9 +11,11 @@ interface MenuItemCardProps {
   image: string;
   rating: number;
   preparationTime: string;
+  id: string;
 }
 
 const MenuItemCard = ({ 
+  id,
   title, 
   description, 
   price, 
@@ -20,6 +23,17 @@ const MenuItemCard = ({
   rating, 
   preparationTime 
 }: MenuItemCardProps) => {
+  const { addToCart } = useCart();
+  
+  const handleAddToCart = () => {
+    addToCart({
+      id,
+      title,
+      price,
+      image
+    });
+  };
+  
   return (
     <Card className="overflow-hidden hover-scale card-shadow">
       <div className="relative h-48">
@@ -51,7 +65,10 @@ const MenuItemCard = ({
           </span>
         </div>
         
-        <Button className="w-full bg-food-orange hover:bg-food-orange/90 flex items-center justify-center gap-2">
+        <Button 
+          className="w-full bg-food-orange hover:bg-food-orange/90 flex items-center justify-center gap-2"
+          onClick={handleAddToCart}
+        >
           <ShoppingCart className="h-4 w-4" /> Add to Cart
         </Button>
       </div>
