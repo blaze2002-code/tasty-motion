@@ -1,14 +1,17 @@
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, X, User } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
+import { useAuth } from "../contexts/AuthContext";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +20,16 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleSignIn = () => {
+    navigate("/signin");
+    setIsMenuOpen(false);
+  };
+
+  const handleSignOut = () => {
+    signOut();
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav
@@ -47,9 +60,18 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button size="sm" variant="outline">
-              Sign In
-            </Button>
+            {user ? (
+              <div className="flex items-center space-x-3">
+                <span className="text-sm">Hello, {user.name.split(' ')[0]}</span>
+                <Button size="sm" variant="outline" onClick={handleSignOut}>
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <Button size="sm" variant="outline" onClick={handleSignIn}>
+                <User className="h-4 w-4 mr-2" /> Sign In
+              </Button>
+            )}
             <Button size="sm" className="bg-food-orange hover:bg-food-orange/90">
               <ShoppingCart className="h-4 w-4 mr-2" /> Cart (0)
             </Button>
@@ -100,9 +122,18 @@ const Navbar = () => {
               Contact
             </Link>
             <div className="pt-4 flex flex-col space-y-2 border-t">
-              <Button size="sm" variant="outline" className="w-full">
-                Sign In
-              </Button>
+              {user ? (
+                <>
+                  <div className="px-4 py-2">Hello, {user.name.split(' ')[0]}</div>
+                  <Button size="sm" variant="outline" className="w-full" onClick={handleSignOut}>
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <Button size="sm" variant="outline" className="w-full" onClick={handleSignIn}>
+                  <User className="h-4 w-4 mr-2" /> Sign In
+                </Button>
+              )}
               <Button size="sm" className="w-full bg-food-orange hover:bg-food-orange/90">
                 <ShoppingCart className="h-4 w-4 mr-2" /> Cart (0)
               </Button>
