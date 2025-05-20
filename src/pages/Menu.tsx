@@ -1,216 +1,152 @@
-
-import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import {
-  Search,
-  ChevronDown,
-  Star,
-  Clock,
-  Flame,
-  Leaf,
-} from "lucide-react";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import MenuItemCard from "@/components/MenuItemCard";
+import { Label } from "@/components/ui/label";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "@/hooks/use-toast";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
-// Placeholder menu data
-const menuData = [
-  {
-    id: 1,
-    key: 1,
-    title: "Butter Chicken",
-    description: "Tender chicken in a rich buttery tomato sauce",
-    price: 320,
-    image: "/assets/butter-chicken.jpg",
-    rating: 4.8,
-    preparationTime: "25 mins",
-    category: "mains",
-    tags: ["popular", "spicy"],
-  },
-  {
-    id: 2,
-    key: 2,
-    title: "Paneer Tikka",
-    description: "Marinated cottage cheese cubes grilled to perfection",
-    price: 250,
-    image: "/assets/paneer-tikka.jpg",
-    rating: 4.6,
-    preparationTime: "20 mins",
-    category: "starters",
-    tags: ["vegetarian", "popular"],
-  },
-  {
-    id: 3,
-    key: 3,
-    title: "Masala Dosa",
-    description: "Crispy rice crepe filled with spiced potato mixture",
-    price: 180,
-    image: "/assets/masala-dosa.jpg",
-    rating: 4.7,
-    preparationTime: "15 mins",
-    category: "breakfast",
-    tags: ["vegetarian", "quick"],
-  },
-  {
-    id: 4,
-    key: 4,
-    title: "Hyderabadi Biryani",
-    description: "Fragrant basmati rice with tender meat and aromatic spices",
-    price: 350,
-    image: "/assets/biryani.jpg",
-    rating: 4.9,
-    preparationTime: "35 mins",
-    category: "mains",
-    tags: ["popular", "spicy"],
-  },
-  {
-    id: 5,
-    key: 5,
-    title: "Vegetable Samosa",
-    description: "Crispy pastry filled with spiced potatoes and peas",
-    price: 120,
-    image: "/assets/samosa.jpg",
-    rating: 4.5,
-    preparationTime: "10 mins",
-    category: "starters",
-    tags: ["vegetarian", "quick"],
-  },
-  {
-    id: 6,
-    key: 6,
-    title: "Chicken Tikka",
-    description: "Grilled chicken pieces marinated in spices and yogurt",
-    price: 280,
-    image: "/assets/chicken-tikka.jpg",
-    rating: 4.7,
-    preparationTime: "22 mins",
-    category: "starters",
-    tags: ["popular", "spicy"],
-  },
-  {
-    id: 7,
-    key: 7,
-    title: "Gulab Jamun",
-    description: "Deep-fried milk solids soaked in sugar syrup",
-    price: 150,
-    image: "/assets/gulab-jamun.jpg",
-    rating: 4.8,
-    preparationTime: "5 mins",
-    category: "desserts",
-    tags: ["sweet", "vegetarian"],
-  },
-  {
-    id: 8,
-    key: 8,
-    title: "Palak Paneer",
-    description: "Cottage cheese cubes in a creamy spinach sauce",
-    price: 270,
-    image: "/assets/palak-paneer.jpg",
-    rating: 4.6,
-    preparationTime: "25 mins",
-    category: "mains",
-    tags: ["vegetarian", "healthy"],
-  },
-];
+// Define the MenuItem type
+type MenuItem = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  category: string;
+};
 
 const Menu = () => {
-  const [activeTab, setActiveTab] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredItems, setFilteredItems] = useState(menuData);
+  const { addToCart } = useCart();
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([
+    {
+      id: "1",
+      name: "Margherita Pizza",
+      description: "Classic pizza with tomato sauce, mozzarella, and basil.",
+      price: 12.99,
+      imageUrl:
+        "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1000&auto=format&fit=crop",
+      category: "Pizza",
+    },
+    {
+      id: "2",
+      name: "Chicken Alfredo Pasta",
+      description: "Creamy Alfredo sauce with grilled chicken and fettuccine.",
+      price: 15.50,
+      imageUrl:
+        "https://images.unsplash.com/photo-1607013251379-e6e2716fa06c?q=80&w=1000&auto=format&fit=crop",
+      category: "Pasta",
+    },
+    {
+      id: "3",
+      name: "Beef Burger",
+      description: "Juicy beef patty with lettuce, tomato, and cheese.",
+      price: 10.75,
+      imageUrl:
+        "https://images.unsplash.com/photo-1571091718767-18b763223a12?q=80&w=1000&auto=format&fit=crop",
+      category: "Burgers",
+    },
+    {
+      id: "4",
+      name: "Caesar Salad",
+      description: "Fresh romaine lettuce with Caesar dressing and croutons.",
+      price: 8.25,
+      imageUrl:
+        "https://images.unsplash.com/photo-1546793665-490e7b6538c4?q=80&w=1000&auto=format&fit=crop",
+      category: "Salads",
+    },
+    {
+      id: "5",
+      name: "Chocolate Brownie",
+      description: "Warm chocolate brownie with vanilla ice cream.",
+      price: 6.00,
+      imageUrl:
+        "https://images.unsplash.com/photo-1630743252518-49b82d5d497c?q=80&w=1000&auto=format&fit=crop",
+      category: "Desserts",
+    },
+    {
+      id: "6",
+      name: "Iced Coffee",
+      description: "Refreshing iced coffee with a hint of vanilla.",
+      price: 4.50,
+      imageUrl:
+        "https://images.unsplash.com/photo-1541167760496-1628856ab773?q=80&w=1000&auto=format&fit=crop",
+      category: "Drinks",
+    },
+  ]);
 
-  useEffect(() => {
-    let result = menuData;
-
-    // Filter by search term
-    if (searchTerm) {
-      result = result.filter(
-        (item) =>
-          item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+  // Group menu items by category
+  const groupedMenuItems = menuItems.reduce((acc: any, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
     }
-
-    // Filter by category (tab)
-    if (activeTab !== "all") {
-      result = result.filter((item) => item.category === activeTab);
-    }
-
-    setFilteredItems(result);
-  }, [searchTerm, activeTab]);
+    acc[item.category].push(item);
+    return acc;
+  }, {});
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow">
-        <div className="bg-food-beige dark:bg-gray-800 py-12">
-          <div className="container mx-auto px-4">
-            <h1 className="text-4xl font-bold text-center mb-2">Our Menu</h1>
-            <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
-              Explore our wide range of delicious dishes
-            </p>
+    <div className="container mx-auto py-8">
+      <h1 className="text-3xl font-bold mb-4">Our Menu</h1>
 
-            {/* Search and filters */}
-            <div className="max-w-md mx-auto mb-8 relative">
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Search dishes..."
-                className="pl-10"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-
-            {/* Category tabs */}
-            <Tabs
-              defaultValue="all"
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="mb-8"
-            >
-              <TabsList className="flex justify-center flex-wrap h-auto p-1">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="starters">Starters</TabsTrigger>
-                <TabsTrigger value="mains">Main Course</TabsTrigger>
-                <TabsTrigger value="desserts">Desserts</TabsTrigger>
-                <TabsTrigger value="breakfast">Breakfast</TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            {/* Menu items */}
-            {filteredItems.length === 0 ? (
-              <div className="text-center py-10">
-                <p className="text-gray-500 dark:text-gray-400">
-                  No items found matching your search.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredItems.map((item) => (
-                  <MenuItemCard
+      <Accordion type="single" collapsible className="w-full">
+        {Object.entries(groupedMenuItems).map(([category, items]) => (
+          <AccordionItem value={category} key={category}>
+            <AccordionTrigger className="text-xl font-semibold py-2">
+              {category}
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {items.map((item) => (
+                  <div
                     key={item.id}
-                    id={item.id}
-                    title={item.title}
-                    description={item.description}
-                    price={item.price}
-                    image={item.image}
-                    rating={item.rating}
-                    preparationTime={item.preparationTime}
-                  />
+                    className="bg-white rounded-lg shadow-md overflow-hidden"
+                  >
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="p-4">
+                      <h2 className="text-lg font-semibold mb-2">{item.name}</h2>
+                      <p className="text-gray-600 text-sm mb-2">{item.description}</p>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-800 font-bold">
+                          ${item.price.toFixed(2)}
+                        </span>
+                        <Button
+                          onClick={() =>
+                            addToCart({
+                              id: item.id,
+                              title: item.name,
+                              price: item.price,
+                              image: item.imageUrl,
+                            })
+                          }
+                        >
+                          Add to Cart
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
-            )}
-          </div>
-        </div>
-      </main>
-      <Footer />
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   );
 };
