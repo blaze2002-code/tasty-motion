@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,7 +90,7 @@ const Menu = () => {
   ]);
 
   // Group menu items by category
-  const groupedMenuItems = menuItems.reduce((acc: any, item) => {
+  const groupedMenuItems = menuItems.reduce((acc: Record<string, MenuItem[]>, item) => {
     if (!acc[item.category]) {
       acc[item.category] = [];
     }
@@ -102,7 +103,7 @@ const Menu = () => {
       <h1 className="text-3xl font-bold mb-4">Our Menu</h1>
 
       <Accordion type="single" collapsible className="w-full">
-        {Object.entries(groupedMenuItems).map(([category, items]) => (
+        {Object.entries(groupedMenuItems).map(([category, items]: [string, MenuItem[]]) => (
           <AccordionItem value={category} key={category}>
             <AccordionTrigger className="text-xl font-semibold py-2">
               {category}
